@@ -1,7 +1,8 @@
 import os
 import pandas as pd
 from datetime import datetime
-
+import mysql.connector
+from sqlalchemy import create_engine   
 
 class Saneamento:
     
@@ -35,6 +36,38 @@ def save_folder(data, path):
     else:
         data.to_csv(path, index=False, mode='a', header=False, sep = ";")
 
+
+def save_mysql(data, myhost, table):
+    data['load_date'] = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    con = mysql.connector.connect(
+        user='root', password='root', host=myhost, port="3306", database='db')
+    
+    print("DB connected")
+    
+    engine  = create_engine(f"mysql+mysqlconnector://root:root@{myhost}/db")
+    data.to_sql(table, con=engine, if_exists='append', index=False)
+    con.close()
+
+
+def read_mysql(myhost, table):
+
+    con = mysql.connector.connect(
+        user='root', password='root', host=myhost, port="3306", database='db')
+    
+    cursor = con.cursor()
+    cursor.execute(f'Select * FROM {table}')
+    cadastro_raw = cursor.fetchall()
+    df = pd.DataFrame(cadastro_raw)
+
+    cursor.execute('describe cadastro_raw')
+    cols = cursor.fetchall()
+    colunas = []
+    for i in range(len(cols)):
+        colunas.append(cols[i][0])
+
+    df.columns = colunas
+    con.close()
+    return df
 
 def error_handler(exception_error, stage, path):
     

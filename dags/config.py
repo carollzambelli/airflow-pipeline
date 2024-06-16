@@ -1,29 +1,19 @@
 import os
 from datetime import datetime
 
-local_path = os.path.abspath(os.getcwd())
-data_path = os.path.dirname(os.path.dirname(local_path))
-
-date_now = datetime.now().date()
-
-
 configs = {
-    "path":{
-        "raw": f"{data_path}/data/raw/raw_cadastro_{date_now}.csv",
-        "work": f"{data_path}/data/work/work_cadastro_{date_now}.csv",
-        "logs": f"{data_path}/data/logs/logs_cadastro_{date_now}.csv"
-    },
+    "URL": "https://randomuser.me/api/?results=3",
     "metadados":{
         "nome_original": [
             "gender",
-            "name.title",
-            "name.first",
-            "name.last",
-            "location.city",
-            "location.state",
-            "location.country",
+            "name_title",
+            "name_first",
+            "name_last",
+            "location_city",
+            "location_state",
+            "location_country",
             "email",
-            "dob.date"
+            "dob_date"
             ],
          "nome": [
             "sexo",
